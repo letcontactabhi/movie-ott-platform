@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Movie-OTT Platform Database Project Summary
 
-## Getting Started
+## Project Overview
+Developed a web application that serves as a database linking movies to their availability on OTT (Over-The-Top) platforms, focusing on movies from Tamil, Malayalam, and Telugu cinema.
 
-First, run the development server:
+## Technologies Used
+- Next.js (App Router) for the full-stack React framework
+- PostgreSQL for the database
+- Prisma as the ORM (Object-Relational Mapping) tool
+- shadcn/ui for UI components
+- Axios for HTTP requests
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Key Components
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. Database Design
+- Implemented a relational database schema using Prisma
+- Created tables for Movies, OTT Platforms, and a junction table for Movie-OTT Platform links
+- Established relationships between entities
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 2. Backend Development
+- Set up API routes using Next.js App Router
+- Implemented CRUD operations for movies and platforms
+- Created an endpoint for linking movies to platforms
+- Developed a search functionality for movies
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### 3. Frontend Development
+- Designed a user interface using React and shadcn/ui components
+- Implemented forms for adding movies, platforms, and linking them
+- Created a search interface for finding movies
+- Displayed the list of movies with their OTT platform availability
 
-## Learn More
+### 4. Database Integration
+- Successfully connected the application to a PostgreSQL database
+- Used Prisma for database queries and schema management
+- Implemented database migrations for schema updates
 
-To learn more about Next.js, take a look at the following resources:
+## Functionalities Implemented
+1. Add new movies with details (title, year, language)
+2. Add new OTT platforms
+3. Link movies to one or more OTT platforms
+4. Search for movies by title, language, or OTT platform
+5. View a list of all movies with their OTT platform availability
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development Process
+1. Set up the Next.js project with App Router
+2. Installed and configured Prisma for database management
+3. Designed and implemented the database schema
+4. Created API routes for backend functionality
+5. Developed the frontend user interface
+6. Integrated frontend with backend using Axios for API calls
+7. Tested and debugged the application
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Challenges Overcome
+- Successfully set up and connected to a PostgreSQL database
+- Implemented a many-to-many relationship between movies and platforms
+- Developed a search functionality that queries across related tables
 
-## Deploy on Vercel
+## Future Improvements
+- Implement user authentication and authorization
+- Add pagination for large datasets
+- Enhance the UI/UX with more interactive elements
+- Implement server-side rendering for improved performance
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project demonstrates a practical application of full-stack web development skills, including database design, API development, and frontend implementation, all centered around managing and querying a movie-OTT platform database.

@@ -1,101 +1,227 @@
-import Image from "next/image";
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [movies, setMovies] = useState([])
+  const [platforms, setPlatforms] = useState([])
+  const [newMovie, setNewMovie] = useState({ title: '', year: '', language: '' })
+  const [newPlatform, setNewPlatform] = useState({ name: '' })
+  const [linkData, setLinkData] = useState({ movieId: '', platformId: '', availabilityStatus: '' })
+  const [searchQuery, setSearchQuery] = useState({ title: '', language: '', platform: '' })
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  useEffect(() => {
+    fetchMovies()
+    fetchPlatforms()
+  }, [])
+
+  const fetchMovies = async () => {
+    const response = await axios.get('/api/movies')
+    setMovies(response.data)
+  }
+
+  const fetchPlatforms = async () => {
+    const response = await axios.get('/api/platforms')
+    setPlatforms(response.data)
+  }
+
+  const addMovie = async (e) => {
+    e.preventDefault()
+    await axios.post('/api/movies', newMovie)
+    setNewMovie({ title: '', year: '', language: '' })
+    fetchMovies()
+  }
+
+  const addPlatform = async (e) => {
+    e.preventDefault()
+    await axios.post('/api/platforms', newPlatform)
+    setNewPlatform({ name: '' })
+    fetchPlatforms()
+  }
+
+  const linkMovieToPlatform = async (e) => {
+    e.preventDefault()
+    await axios.post('/api/link', linkData)
+    setLinkData({ movieId: '', platformId: '', availabilityStatus: '' })
+  }
+
+  const searchMovies = async (e) => {
+    e.preventDefault()
+    const response = await axios.get('/api/search', { params: searchQuery })
+    setMovies(response.data)
+  }
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">Movie-OTT Platform Database</h1>
+
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>Add New Movie</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={addMovie} className="space-y-2">
+            <Input
+              type="text"
+              placeholder="Title"
+              value={newMovie.title}
+              onChange={(e) => setNewMovie({ ...newMovie, title: e.target.value })}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <Input
+              type="number"
+              placeholder="Year"
+              value={newMovie.year}
+              onChange={(e) => setNewMovie({ ...newMovie, year: e.target.value })}
+            />
+            <Select
+              value={newMovie.language}
+              onValueChange={(value) => setNewMovie({ ...newMovie, language: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Tamil">Tamil</SelectItem>
+                <SelectItem value="Malayalam">Malayalam</SelectItem>
+                <SelectItem value="Telugu">Telugu</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button type="submit">Add Movie</Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>Add New OTT Platform</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={addPlatform} className="space-y-2">
+            <Input
+              type="text"
+              placeholder="Platform Name"
+              value={newPlatform.name}
+              onChange={(e) => setNewPlatform({ ...newPlatform, name: e.target.value })}
+            />
+            <Button type="submit">Add Platform</Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>Link Movie to Platform</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={linkMovieToPlatform} className="space-y-2">
+            <Select
+              value={linkData.movieId}
+              onValueChange={(value) => setLinkData({ ...linkData, movieId: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Movie" />
+              </SelectTrigger>
+              <SelectContent>
+                {movies.map((movie) => (
+                  <SelectItem key={movie.id} value={movie.id.toString()}>{movie.title}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={linkData.platformId}
+              onValueChange={(value) => setLinkData({ ...linkData, platformId: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Platform" />
+              </SelectTrigger>
+              <SelectContent>
+                {platforms.map((platform) => (
+                  <SelectItem key={platform.id} value={platform.id.toString()}>{platform.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={linkData.availabilityStatus}
+              onValueChange={(value) => setLinkData({ ...linkData, availabilityStatus: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Availability" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Available">Available</SelectItem>
+                <SelectItem value="Unavailable">Unavailable</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button type="submit">Link Movie to Platform</Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>Search Movies</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={searchMovies} className="space-y-2">
+            <Input
+              type="text"
+              placeholder="Title"
+              value={searchQuery.title}
+              onChange={(e) => setSearchQuery({ ...searchQuery, title: e.target.value })}
+            />
+            <Select
+              value={searchQuery.language}
+              onValueChange={(value) => setSearchQuery({ ...searchQuery, language: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Tamil">Tamil</SelectItem>
+                <SelectItem value="Malayalam">Malayalam</SelectItem>
+                <SelectItem value="Telugu">Telugu</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={searchQuery.platform}
+              onValueChange={(value) => setSearchQuery({ ...searchQuery, platform: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Platform" />
+              </SelectTrigger>
+              <SelectContent>
+                {platforms.map((platform) => (
+                  <SelectItem key={platform.id} value={platform.name}>{platform.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button type="submit">Search</Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Movie List</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2">
+            {movies.map((movie) => (
+              <li key={movie.id}>
+                {movie.title} ({movie.year}) - {movie.language}
+                {movie.platforms.map((p) => (
+                  <span key={p.platformId}> - Available on {p.platform.name} ({p.availabilityStatus})</span>
+                ))}
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     </div>
-  );
+  )
 }
